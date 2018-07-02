@@ -1,0 +1,10 @@
+[servers]
+110 ansible_host=192.168.0.110 ansible_port=22
+119 ansible_host=192.168.0.119 ansible_port=22
+122 ansible_host=192.168.0.122 ansible_port=22
+117 ansible_host=192.168.0.117 ansible_port=22
+
+[vservers]
+110
+119
+122

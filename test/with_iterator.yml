@@ -1,0 +1,58 @@
+---
+- name: get variable with_iterator list
+  hosts: servers:!vservers
+  vars_files:
+    - vars/mail.yml
+
+  tasks:
+    - name: test with_items
+      debug: msg="{{ item }}"
+      with_items:
+        - test1
+        - test2
+
+    - name: test with_togerther
+      debug: msg="{{ item.0 }} and {{ item.1 }}"
+      with_together:
+        - "{{alpha}}"
+        - "{{numbers}}"
+        
+    - name: test with_nested
+      debug: msg="{{ item[0] }} and {{ item[1] }} "
+      with_nested:
+        - [ 'alice', 'bob' ]
+        - [ 'clientdb', 'employeedb', 'providerdb' ]
+
+    - name: Print phone records
+      debug: msg="User {{ item.key }} is {{ item.value.name }} ({{ item.value.telephone }})"
+      with_dict: "{{users}}"
+
+      # first ensure our target directory exists
+    - file: dest=/tmp/fooapp state=directory
+
+    # copy each file over that matches the given pattern
+    #- copy: src={{ item }} dest=/tmp/fooapp/ owner=root mode=600
+    #  become: True
+    #  with_fileglob:
+    #    - /home/jjp/Documents/ansible_learning/test/*
+
+    - name: test with_sequence
+      debug: msg="{{ item }}"
+      with_sequence: start=0 end=32 format=testuser%02x
+
+    - debug: msg={{ item }}
+      with_random_choice:
+        - "go through the door"
+        - "drink from the goblet"
+        - "press the red button"
+        - "do nothing"
+
+    #- action: shell /usr/bin/echo
+    #  register: result
+    #  until: result.stdout.find("all systems go") != -1
+    #  retries: 5
+    #  delay: 10
+
+    - name: indexed loop demo
+      debug: msg="at array position {{ item.0 }} there is a value {{ item.1 }}"
+      with_indexed_items: "{{numbers}}"
